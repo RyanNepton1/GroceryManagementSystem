@@ -1,0 +1,33 @@
+import ca.mcgill.ecse223.grocerystoresystem.controller.UserController;
+
+public class Main {
+    public static void main (String args[]) {
+
+    System.out.println("Given that the customer 'Marwan' exists in the system,"); 
+    //call the controller to create the customer Marwan with some value of points so that he can pay for the order 
+    UserController.registerNewCustomer(marwan, password, 1234567890);
+    //then call the function to get the list of all the customers in the application 
+
+    System.out.println("And initially, no item is available in the inventory"); 
+    //call the function and print the items to show that nothing is there (I think its getItems idk off top of my head tho) 
+
+    System.out.println("Ryan creates the following shipment with bananas and apples"); 
+    //call the controller to create the shipment with the items 
+    //then call the function and print all the items in the inventory 
+
+    System.out.println("Now, Marwan wants to order 7 bananas and 5 apples"); 
+    //create the order and add the items with the controller 
+    //then print the order to show that it works 
+
+    System.out.println("Marwan also wants to order some shovels, but unfortunately we don't carry those"); 
+    //call the controller to add shovels, should throw an error 
+
+    System.out.println("When Marwan attempts to checkout, he wants to pay with his points"); 
+    //have him checkout and pay with the points using controller 
+    //then print the output of the function that tells you his points total after the order goes through 
+
+    System.out.println("Finally, when the delivery deadline arrives, his order is delivered"); 
+    //controller to deliver the order
+
+    }
+}

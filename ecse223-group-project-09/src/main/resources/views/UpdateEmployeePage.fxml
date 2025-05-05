@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.UpdateEmployeePageController">
+   <children>
+      <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleBackToEmployee" text="Back" styleClass="button-small"/>
+      <Text layoutX="25.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter an Employee Username: " />
+      <HBox layoutX="225.0" layoutY="85.0" prefHeight="30.0" prefWidth="340.0">
+         <children>
+            <TextField fx:id="nameField" prefHeight="30.0" prefWidth="120.0" promptText="Username:" visible="true" />
+         </children>
+      </HBox>
+      <VBox layoutX="20.0" layoutY="155.0" prefHeight="120.0" prefWidth="150.0" spacing="10.0">
+         <children>
+            <TextField fx:id="nameUpdateField" prefHeight="30.0" prefWidth="150.0" promptText="Name" visible="false" />
+            <TextField fx:id="phoneUpdateField" prefHeight="30.0" prefWidth="150.0" promptText="Phone Number:" visible="false" />
+            <TextField fx:id="passwordUpdateField" prefHeight="30.0" prefWidth="150.0" promptText="Password:" visible="false" />
+         </children>
+      </VBox> 
+      <Label fx:id="errorLabel" layoutX="20.0" layoutY="300.0" prefHeight="20.0" prefWidth="340.0" textFill="RED" visible="false" styleClass="error-label"/>
+      <Label fx:id="messageLabel" layoutX="20.0" layoutY="130.0" prefHeight="20.0" prefWidth="440.0" textFill="BLACK" visible="false" />
+      <Button fx:id="findButton" layoutX="375.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleFind" text="Find" visible="true" styleClass="button-large"/>
+      <Button fx:id="updateButton" layoutX="20.0" layoutY="280.0" mnemonicParsing="false" onAction="#handleUpdate" text="Update" visible="false" styleClass="button-large"/>
+ 
+   </children>
+</AnchorPane>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.CustomerCartPageController">
+   <children>
+      <CheckBox fx:id="usePointsCheckBox" layoutX="50.0" layoutY="400.0" text="Use Points" />
+      <!-- <CheckBox fx:id="usePointsCheckBox" layoutX="50.0" layoutY="400.0" text="Use Points" />
+      <ListView fx:id="orderSummaryListView" layoutX="50.0" layoutY="50.0" prefHeight="200.0" prefWidth="500.0" />
+      <TextArea fx:id="customerInfoTextArea" layoutX="50.0" layoutY="260.0" prefHeight="50.0" prefWidth="200.0" editable="false" />
+      <TextArea fx:id="userInfoTextArea" layoutX="300.0" layoutY="260.0" prefHeight="50.0" prefWidth="200.0" editable="false" />
+      <CheckBox fx:id="usePointsCheckBox" layoutX="50.0" layoutY="400.0" text="Use Points" />
+      <Button fx:id="payOrderButton" layoutX="300.0" layoutY="320.0" mnemonicParsing="false" onAction="#handlePayOrder" text="Pay Order" />
+      <Button fx:id="cancelOrderButton" layoutX="400.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleCancelOrder" text="Cancel Order" />
+      <Button fx:id="backButton" layoutX="500.0" layoutY="320.0" mnemonicParsing="false" onAction="#handleBack" text="Back" visible="false" />
+   </children> -->
+</AnchorPane>

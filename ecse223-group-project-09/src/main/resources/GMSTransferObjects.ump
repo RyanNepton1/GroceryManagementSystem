@@ -1,0 +1,30 @@
+namespace ca.mcgill.ecse.grocerymanagementsystem.controller.transfer;
+
+class TOUser {
+    immutable;
+    String username;
+    String name;
+    String phoneNumber;
+    String roles; //comma separated roles
+}
+class TOItem {
+    immutable;
+    String name;
+    Integer quantity;
+    Integer price;
+    String type;
+    Integer points;
+}
+class TOShipment {
+    immutable;
+    Integer shipmentNumber;
+    Date dateOrdered;
+    List<TOShipmentItem> shipmentItems;
+}
+class TOShipmentItem {
+    immutable;
+    int orderNumber
+    String itemName;
+    int quantity;
+    String type;
+}

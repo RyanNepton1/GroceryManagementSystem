@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="417.0" prefWidth="613.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.LandingPageController">
+   <children>
+      <TabPane fx:id="tabPane" prefHeight="410.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Home">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="242.0" prefWidth="613.0">
+                     <children>
+                        <fx:include source="Home.fxml" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+          <Tab fx:id="customerTab" text="Customer">
+            <content>
+              <AnchorPane fx:id="customerContentPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="Employee">
+            <content>
+              <AnchorPane fx:id="employeeContentPane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+            </content>
+          </Tab>
+          <Tab text="Manager">
+            <content>
+              <AnchorPane fx:id="managerContentPane" prefHeight="430.0" prefWidth="613.0" xmlns:fx="http://javafx.com/fxml/1" />
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>

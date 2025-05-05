@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.CustomerPageController" spacing="10">
+    <Label text="Customer Management" />
+    <TextField fx:id="usernameField" promptText="Username" />
+    <TextField fx:id="passwordField" promptText="Password" />
+    <TextField fx:id="addressField" promptText="Address" />
+    <TextField fx:id="nameField" promptText="Name" />
+    <TextField fx:id="phoneField" promptText="Phone Number" />
+    <Button text="Register Customer" onAction="#handleRegisterCustomer" />
+    <Button text="Update Customer" onAction="#handleUpdateCustomer" />
+    <Button text="Delete Customer" onAction="#handleDeleteCustomer" />
+</VBox>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="425.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.OrderPageController">
+    <TextField fx:id="orderNumberField" layoutX="150.0" LayoutY="10.0" promptText="Order Number" />
+    <TextField fx:id="itemNameField" layoutX="150.0" LayoutY="40.0" promptText="Item Name" />
+    <Button text="Create Order" layoutX="200.0" LayoutY="90.0" onAction="#handleCreateOrder" />
+    <Button text="Delete Order" layoutX="200.0" LayoutY="120.0" onAction="#handleDeleteOrder" />
+    <Button text="Add Item to Order" layoutX="200.0" LayoutY="150.0" onAction="#handleAddItemToOrder" />
+    <Button text="Remove Item from Order" layoutX="200.0" LayoutY="180.0" onAction="#handleRemoveItemFromOrder" />
+    <Button text="Proceed to Checkout" layoutX="200.0" LayoutY="210.0" onAction="#handleCheckoutOrder" />
+    <Button text="Pay for Order" layoutX="200.0" LayoutY="230.0" onAction="#handlePayOrder" />
+    <Button text="Cancel Order" layoutX="200.0" LayoutY="260.0" onAction="#handleCancelOrder" />
+    <CheckBox fx:id="usePointsCheckBox" layoutX="70.0" layoutY="300.0" text="Use Points" />
+
+    <Button text="Back" layoutX="20.0" LayoutY="290.0" onAction="#handleBackToCustomer" />
+    <Label fx:id="errorLabel" layoutX="14.0" layoutY="320.0" textFill="RED" text="" styleClass="error-label"/>
+</AnchorPane>

@@ -1,0 +1,323 @@
+class Order {
+    depend java.time.LocalDate;
+
+    status {
+        UnderConstruction {
+            addOI(Item i, int q)
+                [this.numberOfOrderItems()<=49 && q<=10 && i.getQuantityInInventory()>=q]
+                / { add(i, q); }
+                -> UnderConstruction;
+
+            //error for number of order items >49
+            addOI(Item i, int q)
+                [this.numberOfOrderItems()>49]
+                / { orderItemMaxCapacity(); }
+                -> UnderConstruction;
+
+            //error for q>10
+            addOI(Item i, int q)
+                [q>10]
+                / { qOutOfBounds(); }
+                -> UnderConstruction;
+
+            //error for i.getQuantityInInventory<q
+            addOI(Item i, int q)
+                [i.getQuantityInInventory()<q]
+                / { inventoryMaxCap(i); }
+                -> UnderConstruction;
+
+            //successfully remove item
+            remove(Item i)
+                [existsInOrder(i)]
+                / { removeOI(i); }
+                -> UnderConstruction;
+
+            //unsuccessfully remove item due to in existent item
+            remove(Item i)
+                [!existsInOrder(i)]
+                / { cannotRemove(); }
+                -> UnderConstruction;
+
+            //successfully change q
+            changeOIQuantity(Item i, int q)
+                [existsInOrder(i) && q <= 10 && i.getQuantityInInventory() >= q]
+                / { updateItemQuantity(i, q); }
+                -> UnderConstruction;
+
+            //item does not exist in order, helper method to display error
+            changeOIQuantity(Item i, int q)
+                [!existsInOrder(i)]
+                / { itemNotInOrder(i); }
+                -> UnderConstruction;
+
+            //new quantity is not valid, helper method to display error
+            changeOIQuantity(Item i, int q)
+                [!(q >= 0 && q <= 10)]
+                / { invalidQuantity(q); }
+                -> UnderConstruction;
+
+            //checkout
+            checkout()
+               [this.hasOrderItems()]
+               -> Pending;
+
+           //cancel order. need to delete order(?) as action
+            cancel()
+                -> Cancelled;
+        }
+        Pending {
+            //fixed calculateCost()
+            entry / {
+                calculateCost();
+            };
+
+
+            //use points
+            usePointsInOrder()
+                / { useCustomerPoints(); }
+                -> Pending;
+
+
+            placeOrder()
+                [this.getPricePaid() == this.getTotalCost()]
+                / { removeFromInventory(); addPoints(); setDatePlaced(new java.sql.Date(System.currentTimeMillis())); }
+                -> Placed;
+
+            //not deleting order
+            cancel()
+                -> Cancelled;
+        }
+        Placed {
+            //cancel order. need to delete order(?) as action. MAKE SURE TO RESTORE ORIGINAL NUMBER OF ITEMS IN INVENTORY WITH HELPER METHOD FOR THIS ONE AS AN ACTION!!!!
+            cancel()
+                / { restoreQuantities(); }
+                -> Cancelled;
+
+            //only move to in preparation if employee is assigned. use helper method to assign employee to order.
+            assign(Employee e)
+                [this.getOrderAssignee() == null]
+                / { this.setOrderAssignee(e); }
+                -> InPreparation;
+        }
+        InPreparation {
+            //successfully assemble order. to be successfully assembled, "Orders that contain perishable items can only be assembled on their delivery date". check current date to ensure it is equal to the delivery date in helper method.
+            assemble()
+                [containsPerishable() && isDateOfDelivery()]
+                -> ReadyForDelivery;
+
+            //can successfully assemble order if it does not have perishable items
+            assemble()
+                [!containsPerishable()]
+                -> ReadyForDelivery;
+
+
+            //unsuccessfully assemble order. try to assemble order with a perishable item NOT on delivery date.
+            assemble()
+                [containsPerishable() && !isDateOfDelivery()]
+                / { cannotBeAssembled(); }
+                -> InPreparation;
+        }
+        ReadyForDelivery {
+            //change state if current date is the date of delivery. check logic for this by checking date placed + deadline = today.
+            //localdate.now ; know when an order was placed + deadline must = now date
+            deliver()
+                [isDateOfDelivery()]
+                -> Delivered;
+        }
+        Delivered {}
+        Cancelled {}
+    }
+
+    private void add(Item i, int q){
+        OrderItem o = new OrderItem(q, this.getGroceryManagementSystem(), this, i);
+        this.addOrderItem(o);
+    }
+    //for runtime exception, catch runtime exception in controller and throw grocery store exception
+    private void orderItemMaxCapacity(){
+        this.setHasErrorMsg(true);
+        this.setErrorMsg("Error: Order has max number of distinct items.");
+    }
+    private void qOutOfBounds(){
+        this.setHasErrorMsg(true);
+        this.setErrorMsg("Error: Cannot order more than 10 of an item.");
+    }
+    private void inventoryMaxCap(Item i){
+        this.setHasErrorMsg(true);
+        this.setErrorMsg("Error: item "+i.getName()+" has low inventory.");
+    }
+    private boolean existsInOrder(Item i){
+        for( OrderItem oi : this.getOrderItems()){
+            if (oi.getItem().equals(i))
+                return true;
+        }
+        return false;
+    }
+    private void removeOI(Item i){
+        for( OrderItem oi : this.getOrderItems()){
+            if (oi.getItem().equals(i)){
+                oi.delete();
+                return;
+            }
+        }
+    }
+    private void cannotRemove(){
+        this.setHasErrorMsg(true);
+        this.setErrorMsg("Error: Cannot remove an item that does not exist in an order.");
+    }
+
+
+      public void calculateCost(){
+        int tc = 0;
+        int orderId = this.orderNumber;
+
+        System.out.println("[" + orderId + "] Starting cost calculation...");
+
+        // Same-day delivery fee
+        if (this.getDeadline() == DeliveryDeadline.SameDay) {
+          System.out.println("[" + orderId + "] Same-day delivery selected. Adding fee of 500 cents.");
+          tc += 500;
+        }
+
+        for (OrderItem oi : this.getOrderItems()) {
+          String itemName = oi.getItem().getName();
+          int unitPrice = oi.getItem().getPrice(); // in cents
+          int quantity = oi.getQuantity();
+          int discountMultiplier = calculateDiscountMultiplier(quantity); // scaled to 1000
+
+          int itemCost = unitPrice * quantity * discountMultiplier / 1000;
+
+          // Debug statements
+          System.out.println("[" + orderId + "] Processing item: " + itemName);
+          System.out.println("[" + orderId + "]   Unit price (cents): " + unitPrice);
+          System.out.println("[" + orderId + "]   Quantity: " + quantity);
+          System.out.println("[" + orderId + "]   Discount multiplier: " + discountMultiplier);
+          System.out.println("[" + orderId + "]   Discounted item cost (cents): " + itemCost);
+
+          tc += itemCost;
+          System.out.println("[" + orderId + "]   Running total cost (cents): " + tc);
+        }
+
+        this.totalCost = tc - pointsUsed;
+        System.out.println("[" + orderId + "] Total cost set to: " + this.totalCost + " cents");
+      }
+
+      public int calculateDiscountMultiplier(int quantity){
+        int discount = (quantity - 1) * 50;
+        if (discount > 450) discount = 450;
+        return 1000 - discount;
+      }
+
+
+
+
+    // takes in item and the new preferred quantity
+    private void updateItemQuantity (Item i, int q) {
+        for( OrderItem oi : this.getOrderItems()){
+            if (oi.getItem().equals(i))
+                oi.setQuantity(q);
+        }
+    }
+
+    private void itemNotInOrder(Item i) {
+        this.setHasErrorMsg(true);
+        String e = "Error: order does not include item "+ i.getName();
+        this.setErrorMsg(e);
+    }
+
+    private void invalidQuantity(int q) {
+        this.setHasErrorMsg(true);
+        if (q < 0) {
+            this.setErrorMsg("Error: quantity must be non-negative");
+        } else {
+            this.setErrorMsg("Error: quantity cannot exceed 10");
+        }
+    }
+
+    private void useCustomerPoints(){
+        int points = this.getOrderPlacer().getNumberOfPoints();
+        if(this.totalCost-points >=0) {
+          this.pointsUsed=points;
+          this.totalCost -= points;
+          this.getOrderPlacer().setNumberOfPoints(0);
+        }
+        else {
+          this.pointsUsed = totalCost;
+          this.getOrderPlacer().setNumberOfPoints(this.getOrderPlacer().getNumberOfPoints()-totalCost);
+          this.totalCost = 0;
+        }
+    }
+    
+  private void removeFromInventory(){
+    int newQuantityInInventory = 0;
+
+        for (OrderItem i : this.getOrderItems()) {
+            newQuantityInInventory = i.getItem().getQuantityInInventory() - i.getQuantity();
+            i.getItem().setQuantityInInventory(newQuantityInInventory);
+        }
+  }
+
+    private void restoreQuantities () {
+
+        int newQuantityInInventory = 0;
+
+        for (OrderItem i : this.getOrderItems()) {
+            newQuantityInInventory = i.getItem().getQuantityInInventory() + i.getQuantity();
+            i.getItem().setQuantityInInventory(newQuantityInInventory);
+        }
+    }
+
+    private boolean containsPerishable () {
+            for (OrderItem i : this.getOrderItems()) {
+                if (i.getItem().getIsPerishable()) {
+                    return true;
+                }
+            }
+            return false;
+    }
+
+    private void cannotBeAssembled () {
+        this.setHasErrorMsg(true);
+        this.setErrorMsg("cannot finish assembling an order with perishable items before the deadline");
+    }
+
+
+    public boolean isDateOfDelivery(){
+        LocalDate today = LocalDate.now();
+        LocalDate datePlaced = this.getDatePlaced().toLocalDate();
+
+        DeliveryDeadline deadline = this.getDeadline();
+        if(deadline == DeliveryDeadline.SameDay){
+            if(today.equals(datePlaced) || datePlaced.isBefore(today))
+                return true;
+            return false;
+        }
+        if (deadline == DeliveryDeadline.SameDay) {
+            return !datePlaced.isAfter(today); // true if today or before
+        }
+        if (deadline == DeliveryDeadline.InOneDay) {
+            LocalDate expectedDate = datePlaced.plusDays(1);
+            return !expectedDate.isAfter(today); // true if today or before
+        }
+        if (deadline == DeliveryDeadline.InTwoDays) {
+            LocalDate expectedDate = datePlaced.plusDays(2);
+            return !expectedDate.isAfter(today);
+        }
+        if (deadline == DeliveryDeadline.InThreeDays) {
+            LocalDate expectedDate = datePlaced.plusDays(3);
+            return !expectedDate.isAfter(today);
+        }
+        return false;
+    }
+
+    public void addPoints () {
+        int total_points  = 0;
+        List<OrderItem> orderItems = this.getOrderItems();
+
+        for (OrderItem oi : orderItems) {
+            total_points += (oi.getItem().getNumberOfPoints() * oi.getQuantity());
+        }
+        this.getOrderPlacer().setNumberOfPoints(this.getOrderPlacer().getNumberOfPoints() + total_points);
+    }
+
+
+}

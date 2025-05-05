@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ca.mcgill.ecse.grocerymanagementsystem.view.EmployeeController">
+   <children>
+      <Text layoutX="220.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Employee Tools" style="-fx-font-weight: bold; -fx-font-size: 25;"/>
+      <Button layoutX="155.0" layoutY="80.0" prefWidth="180.0" mnemonicParsing="false" onAction="#handleRegisterEmployeeClicked" text="Register New Employee" styleClass="button-xlarge"/>
+      <Button layoutX="155.0" layoutY="140.0" prefWidth="180.0" mnemonicParsing="false" onAction="#handleUpdateEmployeeClicked" text="Update Existing Employee" styleClass="button-xlarge"/>
+      <Button layoutX="155.0" layoutY="200.0" prefWidth="180.0" mnemonicParsing="false" onAction="#handleDeleteEmployeeClicked" text="Delete Existing Employee" styleClass="button-xlarge"/>
+      <Button layoutX="155.0" layoutY="260.0" mnemonicParsing="false" onAction="#handleViewAssignedOrdersClicked" text="View Assigned Orders" styleClass="button-xlarge"/>
+   </children>
+</AnchorPane>
