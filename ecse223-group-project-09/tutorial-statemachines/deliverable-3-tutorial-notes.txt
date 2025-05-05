@@ -1,0 +1,63 @@
+in processGroceryorder feature
+     # if datePlaces is today make sure that the Date is today's Date
+        # similar to thing in shipment step defintiions: if date is "NULL" convert to null
+        # if the date string is the string"today", then return today's date (another case, similarly)
+              # in controller, find today's date and compare today's date
+        # now, also have to change the order step definitions, check top of doc "given the following orders exit" uses "today", "yesterday"
+
+         #now we have to add a state as a field INTO the model
+          Scenario Outline: Successfully deliver order
+            Given the following orders exist in the system
+              | id    | datePlaced   | deadline   | customer  | assignee | state              |
+              | ready | <datePlaced> | <deadline> | obiwan212 | claire   | ready for delivery |
+
+
+state machines
+
+//FlightStates.ump
+class Flight{
+    status {
+        NotReady {
+            assignPlane(Plane P)
+                [!p.hasNextFlight() && this.hasPilot()]
+                / { setPlane(p); }
+                -> Ready;
+            assignPlane(Plane P)
+                [!p.hasNextFlight() && !this.hasPilot()]
+                / { setPlane(p); }
+                -> NotReady;
+            assignPilot(Person P)
+                [!p.hasWorkingFlight() && this.hasPlane()]
+                / { setPilot(p); }
+                -> Ready;
+            assignPlane(Person P)
+                [!p.hasWorkingFlight() && !this.hasPlane()]
+                / { setPilot(p); }
+                -> NotReady;
+            cancel()
+                / { releasePilot(); releasePlane(); }
+                -> Cancelled;
+        }
+        Ready {
+
+        }
+        InAir {
+            //TODO
+        }
+        Landed {
+            //TODO
+        }
+        Cancelled {
+            //TODO
+        }
+    }
+    // in Flight class
+    private void releasePilot(){
+        if(this.hasPilot())
+            this.getPilot.setWorkingFlight(null);
+    }
+    private void releasePlane(){
+        if(this.hasPlane())
+            this.getPlane.setNextFlight(null);
+    }
+}
